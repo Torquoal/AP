@@ -13,7 +13,7 @@
  */
 int main()
 {
-	printf("!!");
+	//printf("!!");
 
 	Queue *q;
 	char buf[MAXLINE];
