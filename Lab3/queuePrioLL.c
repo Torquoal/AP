@@ -3,12 +3,14 @@
 #include <string.h>
 
 /*
- * Priority Queue, basically add must order where new entries go int the queue via priority.
+ * implementation of a Priority queue using a linked list
+ * use priority argument in add() to iterate through queue and place
  */
 
 struct q_element {
 	struct q_element *next;
 	void *value;
+	//may have to add prio value, pre value
 };
 
 struct queue {
@@ -33,6 +35,8 @@ Queue *q_create(void) {
 /*
  * add Item to the Queue; 3rd arg is priority in MIN_PRIO..MAX_PRIO;
  * return 1/0 if successful/not-successful
+ * if empty, p is head. else check if p prio > heads. If so, p is head
+ * else iterate through list until prio is less and stop.
  */
 int q_add(Queue *q, Item i, int prio) {
 	struct q_element *p;

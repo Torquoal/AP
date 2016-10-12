@@ -13,6 +13,8 @@
  */
 int main()
 {
+	printf("!!");
+
 	Queue *q;
 	char buf[MAXLINE];
 	int *i, prio, mod;
