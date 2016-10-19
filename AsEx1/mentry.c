@@ -6,7 +6,7 @@
 #define MAXLINE 200
 #define MAXARRAY 50
 #define MAXPOSTCODE 10
-#define HASHVALUE 103
+#define HASHVALUE 101
 
 
 
@@ -35,6 +35,7 @@ MEntry *me_get(FILE *fd){
    				entry->full_address[k] = line[j]; 
 				k++;
 			}
+			
 			entry->full_address[k++] = '\n'; 
 			//printf("Address Line: %s\n", entry->full_address);
 			
@@ -45,7 +46,8 @@ MEntry *me_get(FILE *fd){
 					for(x = 0; line[x] != ','; x++) {
    			 			entry->surname[x] = line[x]; 
 					}
-				
+					x++;
+					entry->surname[x] = '\0';
 					//printf("Entry->Surname: %s\n", entry->surname);
 					break;
 				
@@ -64,6 +66,8 @@ MEntry *me_get(FILE *fd){
 							z++;
 						}
 					}
+					z++;
+					entry->postcode[z] = '\0';
 					//printf("Entry->Postcode: %s\n", entry->postcode);
 					break;
 		
@@ -72,8 +76,8 @@ MEntry *me_get(FILE *fd){
 	}
 	printf("Address Line: %s\n", entry->full_address);
 	printf("%ld\n",me_hash(entry, HASHVALUE ));
-	//return entry;
-	return NULL;
+	return entry;
+	//return NULL;
 }
 
 /* me_hash computes a hash of the MEntry, mod size */
@@ -97,7 +101,9 @@ unsigned long me_hash(MEntry *me, unsigned long size){
    		temp[j] = me->postcode[i]; 
 		j++;
 	}
-	
+	//j++;
+	temp[j] = '\0';
+	printf("HashString: %s\n", temp);
 	// initialise hash value, iterate over char array and build hash value
 
 	unsigned long hash;	
@@ -105,8 +111,9 @@ unsigned long me_hash(MEntry *me, unsigned long size){
 	for (k=0; temp[k] != '\0'; k++){
 		hash = temp[k] + (33 * hash); 
 	}	
-	
+	printf("Hash Gen'd: %ld\n", hash % size);
 	return hash % size;
+	//return 1;
 }
 
 /* me_print prints the full address on fd */
@@ -118,16 +125,18 @@ void me_print(MEntry *me, FILE *fd){
  * me1<me2, me1==me2, me1>me2
  */
 int me_compare(MEntry *me1, MEntry *me2){
-	unsigned long hash1;
-	unsigned long hash2;	
+	unsigned long hash1, hash2;
+		
 	
 	hash1 = me_hash(me1, HASHVALUE );
-	//printf("hash1: %ld\n", hash1);
+	printf("hash1: %ld\n", hash1);
+	//printf(" ");
 	
 	hash2 = me_hash(me2, HASHVALUE);
-	//printf("hash2: %ld\n", hash2);
-	
+	printf("hash2: %ld\n", hash2);
+	//printf(" ");
 	return hash1 - hash2;
+	//return 1;
 }
 
 /* me_destroy destroys the mail entry
