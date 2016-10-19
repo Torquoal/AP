@@ -10,7 +10,6 @@
 
 
 
-
 /* me_get returns the next file entry, or NULL if end of file*/
 MEntry *me_get(FILE *fd){
 	struct mentry *entry;
@@ -19,10 +18,11 @@ MEntry *me_get(FILE *fd){
 	entry->full_address = malloc(MAXLINE*(sizeof(char)));
 	entry->surname = malloc(MAXARRAY*(sizeof(char)));
 	entry->postcode = malloc(MAXPOSTCODE*(sizeof(char)));
+	int i, j, x, y, z;
 	int k=0;
 		 
 	// get a new line 
-	for (int i = 1; i < 4; i++){
+	for (i = 1; i < 4; i++){
 		fgets(line, MAXLINE, stdin);
 		
 		if (line[0] ==  '\0'){ 
@@ -31,8 +31,8 @@ MEntry *me_get(FILE *fd){
 		} else {		
 
 			// Add the address line to full_address for the entry
-			for(int i = 0; line[i] != '\n'; i++) {
-   				entry->full_address[k] = line[i]; 
+			for(j = 0; line[j] != '\n'; j++) {
+   				entry->full_address[k] = line[j]; 
 				k++;
 			}
 			entry->full_address[k++] = '\n'; 
@@ -42,8 +42,8 @@ MEntry *me_get(FILE *fd){
 			switch (i){
 		
 				case 1 : // iterate chars of surname, add it to struct 
-					for(int i = 0; line[i] != ','; i++) {
-   			 			entry->surname[i] = line[i]; 
+					for(x = 0; line[x] != ','; x++) {
+   			 			entry->surname[x] = line[x]; 
 					}
 				
 					//printf("Entry->Surname: %s\n", entry->surname);
@@ -58,10 +58,10 @@ MEntry *me_get(FILE *fd){
 				
 		    		case 3 : // remove non alphanum chars from postcode, put in struct 
 				
-					for(int i = 0, j = 0; line[i] != '\0' ; i++) {
-					if (isalnum(line[i])){
-   			 				entry->postcode[j] = line[i]; 
-							j++;
+					for(y = 0, z = 0; line[y] != '\0' ; y++) {
+					if (isalnum(line[y])){
+   			 				entry->postcode[z] = line[y]; 
+							z++;
 						}
 					}
 					//printf("Entry->Postcode: %s\n", entry->postcode);
@@ -70,18 +70,20 @@ MEntry *me_get(FILE *fd){
 			}
 		}
 	}
-	//printf("Address Line: %s\n", entry->full_address);
-	//printf("%ld\n",me_hash(entry, HASHVALUE ));
-	return entry;
+	printf("Address Line: %s\n", entry->full_address);
+	printf("%ld\n",me_hash(entry, HASHVALUE ));
+	//return entry;
+	return NULL;
 }
 
 /* me_hash computes a hash of the MEntry, mod size */
 unsigned long me_hash(MEntry *me, unsigned long size){
 	char temp[MAXLINE];
+	int i, k;
 	int j = 0;
 	
 	// add the surname, housenumber and postcode to one char array to hash
-	for(int i = 0; me->surname[i] != '\0'; i++) {
+	for(i = 0; me->surname[i] != '\0'; i++) {
    		temp[j] = me->surname[i]; 
 		j++;
 	}	
@@ -91,7 +93,7 @@ unsigned long me_hash(MEntry *me, unsigned long size){
 		j++;
 	}
 	
-	for(int i = 0; me->postcode[i] != '\0'; i++) {
+	for(i = 0; me->postcode[i] != '\0'; i++) {
    		temp[j] = me->postcode[i]; 
 		j++;
 	}
@@ -100,8 +102,8 @@ unsigned long me_hash(MEntry *me, unsigned long size){
 
 	unsigned long hash;	
 
-	for (int i=0; temp[i] != '\0'; i++){
-		hash = temp[i] + (33 * hash); 
+	for (k=0; temp[k] != '\0'; k++){
+		hash = temp[k] + (33 * hash); 
 	}	
 	
 	return hash % size;
@@ -120,10 +122,10 @@ int me_compare(MEntry *me1, MEntry *me2){
 	unsigned long hash2;	
 	
 	hash1 = me_hash(me1, HASHVALUE );
-	printf("hash1: %ld\n", hash1);
+	//printf("hash1: %ld\n", hash1);
 	
 	hash2 = me_hash(me2, HASHVALUE);
-	printf("hash2: %ld\n", hash2);
+	//printf("hash2: %ld\n", hash2);
 	
 	return hash1 - hash2;
 }
