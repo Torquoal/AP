@@ -1,7 +1,7 @@
 #include "mentry.h"
-#include <stdio.h>
+//#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+//#include <string.h>
 #include <ctype.h>
 #define MAXLINE 200
 #define MAXARRAY 50
@@ -23,9 +23,9 @@ MEntry *me_get(FILE *fd){
 		 
 	// get a new line 
 	for (i = 1; i < 4; i++){
-		fgets(line, MAXLINE, stdin);
+		fgets(line, MAXLINE, fd);
 		
-		if (line[0] ==  '\0'){ 
+		if (line[0] ==  '\0' || !isalnum(line[0])){  //bandaid to stop mem issues
 			printf("END");
 			return NULL;
 		} else {		
@@ -58,7 +58,7 @@ MEntry *me_get(FILE *fd){
 					//printf("Entry->HouseNum: %d\n", entry->house_number);
 					break;
 				
-		    		case 3 : // remove non alphanum chars from postcode, put in struct 
+                case 3 : // remove non alphanum chars from postcode, put in struct
 				
 					for(y = 0, z = 0; line[y] != '\0' ; y++) {
 					if (isalnum(line[y])){
@@ -70,6 +70,10 @@ MEntry *me_get(FILE *fd){
 					entry->postcode[z] = '\0';
 					//printf("Entry->Postcode: %s\n", entry->postcode);
 					break;
+                
+                default: // somehow we have gotten past line 4 or some other weird value, exit
+                    return NULL;
+
 		
 			}
 		}
@@ -101,17 +105,17 @@ unsigned long me_hash(MEntry *me, unsigned long size){
    		temp[j] = me->postcode[i]; 
 		j++;
 	}
-	//j++;
 	temp[j] = '\0';
-	printf("HashString: %s\n", temp);
+	//printf("HashString: %s\n", temp);
 	// initialise hash value, iterate over char array and build hash value
 
-	unsigned long hash;	
+	unsigned long hash = 0;	
 
 	for (k=0; temp[k] != '\0'; k++){
 		hash = temp[k] + (33 * hash); 
 	}	
-	printf("Hash Gen'd: %ld\n", hash % size);
+	
+	//printf("Hash Gen'd: %ld\n", hash % size);
 	return hash % size;
 	//return 1;
 }
@@ -129,12 +133,12 @@ int me_compare(MEntry *me1, MEntry *me2){
 		
 	
 	hash1 = me_hash(me1, HASHVALUE );
-	printf("hash1: %ld\n", hash1);
-	//printf(" ");
+	//printf("hash1: %ld\n", hash1);
+	//printf("\0");
 	
 	hash2 = me_hash(me2, HASHVALUE);
-	printf("hash2: %ld\n", hash2);
-	//printf(" ");
+	//printf("hash2: %ld\n", hash2);
+	//printf("\0");
 	return hash1 - hash2;
 	//return 1;
 }
