@@ -26,7 +26,7 @@ MEntry *me_get(FILE *fd){
 		fgets(line, MAXLINE, fd);
 		
 		if (line[0] ==  '\0' || !isalnum(line[0])){  //bandaid to stop mem issues
-			printf("END");
+			//printf("END");
 			return NULL;
 		} else {		
 
@@ -58,7 +58,7 @@ MEntry *me_get(FILE *fd){
 					//printf("Entry->HouseNum: %d\n", entry->house_number);
 					break;
 				
-                case 3 : // remove non alphanum chars from postcode, put in struct
+                		case 3 : // remove non alphanum chars from postcode, put in struct
 				
 					for(y = 0, z = 0; line[y] != '\0' ; y++) {
 					if (isalnum(line[y])){
@@ -71,15 +71,15 @@ MEntry *me_get(FILE *fd){
 					//printf("Entry->Postcode: %s\n", entry->postcode);
 					break;
                 
-                default: // somehow we have gotten past line 4 or some other weird value, exit
-                    return NULL;
+               		 	default: // somehow we have gotten past line 4 or some other weird value, exit
+                    			return NULL;
 
 		
 			}
 		}
 	}
-	printf("Address Line: %s\n", entry->full_address);
-	printf("%ld\n",me_hash(entry, HASHVALUE ));
+	//printf("Address Line: %s\n", entry->full_address);
+	//printf("%ld\n",me_hash(entry, HASHVALUE ));
 	return entry;
 	//return NULL;
 }
