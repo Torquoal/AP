@@ -8,8 +8,6 @@ set(SOURCE_FILES
     finddupl.c
         mentry.c
     mentry.h
-
-    mlist.h
-    mlistLL.c)
+    mlist.c)
 
 add_executable(AsEx1 ${SOURCE_FILES})

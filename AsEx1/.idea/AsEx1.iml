@@ -3,10 +3,10 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/mentry.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/mentry.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/finddupl.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/mlistLL.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mlist.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/mlist.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/finddupl.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mentry.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />

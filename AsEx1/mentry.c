@@ -1,12 +1,12 @@
 #include "mentry.h"
 //#include <stdio.h>
 #include <stdlib.h>
-//#include <string.h>
+#include <string.h>
 #include <ctype.h>
 #define MAXLINE 200
 #define MAXARRAY 50
 #define MAXPOSTCODE 10
-#define HASHVALUE 101
+#define HASHVALUE 103
 
 
 
@@ -37,7 +37,6 @@ MEntry *me_get(FILE *fd){
 			}
 			
 			entry->full_address[k++] = '\n'; 
-			//printf("Address Line: %s\n", entry->full_address);
 			
 		
 			switch (i){
@@ -58,7 +57,7 @@ MEntry *me_get(FILE *fd){
 					//printf("Entry->HouseNum: %d\n", entry->house_number);
 					break;
 				
-                		case 3 : // remove non alphanum chars from postcode, put in struct
+                case 3 : // remove non alphanum chars from postcode, put in struct
 				
 					for(y = 0, z = 0; line[y] != '\0' ; y++) {
 					if (isalnum(line[y])){
@@ -71,8 +70,8 @@ MEntry *me_get(FILE *fd){
 					//printf("Entry->Postcode: %s\n", entry->postcode);
 					break;
                 
-               		 	default: // somehow we have gotten past line 4 or some other weird value, exit
-                    			return NULL;
+                default: // somehow we have gotten past line 4 or some other weird value, exit
+                    return NULL;
 
 		
 			}
@@ -81,7 +80,6 @@ MEntry *me_get(FILE *fd){
 	//printf("Address Line: %s\n", entry->full_address);
 	//printf("%ld\n",me_hash(entry, HASHVALUE ));
 	return entry;
-	//return NULL;
 }
 
 /* me_hash computes a hash of the MEntry, mod size */
@@ -129,19 +127,29 @@ void me_print(MEntry *me, FILE *fd){
  * me1<me2, me1==me2, me1>me2
  */
 int me_compare(MEntry *me1, MEntry *me2){
-	unsigned long hash1, hash2;
+	//unsigned long hash1, hash2;
 		
 	
-	hash1 = me_hash(me1, HASHVALUE );
+	//hash1 = me_hash(me1, HASHVALUE );
 	//printf("hash1: %ld\n", hash1);
 	//printf("\0");
 	
-	hash2 = me_hash(me2, HASHVALUE);
+	//printf("Me2Present: %s\n", me2->surname);
+	//hash2 = me_hash(me2, HASHVALUE);
+	
 	//printf("hash2: %ld\n", hash2);
 	//printf("\0");
-	return hash1 - hash2;
+	//return hash1 - hash2;
 	//return 1;
+	
+	if ((strcmp(me1->surname, me2->surname) == 0)
+		&& (strcmp(me1->postcode, me2->postcode) ==0)
+		&& (me1->house_number == me2->house_number)){
+		return 0;
+	}
+	return 1;
 }
+
 
 /* me_destroy destroys the mail entry
  */
