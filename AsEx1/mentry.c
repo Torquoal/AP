@@ -134,8 +134,9 @@ int me_compare(MEntry *me1, MEntry *me2){
 	if ((strcmp(me1->surname, me2->surname) == 0)
 		&& (strcmp(me1->postcode, me2->postcode) ==0)
 		&& (me1->house_number == me2->house_number)){
-		return 0;
-	}else{
+			return 0;
+	}
+	/*}else{
 		int x;
 		if ( (x = (strcmp(me1->surname, me2->surname)) != 0)){ 
 			return x;
@@ -144,8 +145,8 @@ int me_compare(MEntry *me1, MEntry *me2){
 			return x;
 		}
 		return me1->house_number - me2->house_number;  	
-	}
-	
+	}*/
+	return 1;
 }
 
 
