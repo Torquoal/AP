@@ -2,7 +2,7 @@
 #include "mlist.h"
 #include <stdlib.h>
 #include <stdio.h>
-#define HASHVALUE 300
+#define HASHVALUE 4
 
 typedef struct mlistnode {
 	struct mlistnode *next;
@@ -54,7 +54,7 @@ int ml_add(MList **ml, MEntry *me){
 	// there are any entries. if there are, iterate through them until at the end.
 	// then append. If not, make it the first entry in that bucket.
 	MList *p;
-	MListNode *q, *r;
+	MListNode *q, *r, *s;
 	unsigned long hashme;
 	int i = 0;
 	
@@ -75,31 +75,49 @@ int ml_add(MList **ml, MEntry *me){
 	// adds to the front
 	q->next = p->table[hashme]; 
 	p->table[hashme] = q;
+	printf("Added Entry: %s\n at bucket %d\n", q->entry->surname, hashme);
+
 	for (r = p->table[hashme]; r != NULL; r = r->next){
 		i++;
 	}
-	printf("i: %d\n", i);
+
+	//printf("i: %d\n", i);
 	
 	// if a bucket is over 20, should make a new table with larger size. Then for
 	// each entry in old table, add to the new one, then destroy it. Once finished,
 	// destroy the old table and set MList table to the new one.
 
 
-	if (i > 20){ 
+	if (i > 2){ 
 		if (ml_verbose){
 			fprintf(stderr, "mlist: resizing mailing list\n");
 			}
 		printf("Resize time!\n");
-		//printf("Size: %ld\n", p->size);
-		p->size = (p->size)*2;
-		//printf("Size: %ld\n", p->size);
-		p->table = realloc(p->table, sizeof(MListNode*)*(p->size)); 
-		//printf("TableSize: %d\n", sizeof(p->table)/sizeof(p->table[0]));
-	}
-	//printf("TableEntry: %s\n", p->table[hashme]->entry->surname);
-	
-	
-	
+		int j = 0;
+		int oldSize = p->size;
+		p->size = (p->size)*2;				
+
+		MListNode **newTable = malloc(sizeof(MListNode*)*p->size);
+		printf("Table resized from %d to %d\n", oldSize, p->size);
+
+		// for each bucket in table
+		for (j = 0; j < oldSize; j++){  
+			// for each entry in the bucket
+			for (r = p->table[j]; r != NULL; r = r->next){
+				// add entries to newTable, then free destroy this entry 			
+				
+				
+				hashme = me_hash(s->entry, p->size);				
+				s->next = newTable[hashme]; 
+				newTable[hashme] = s;
+				printf("Reallocated Entry: %s\n at bucket %d\n", s->entry->surname, j);
+			}
+		}
+		p->table = newTable;	
+
+		printf("Resize time!\n");
+		
+	}	
 	return 1;
 }	
 

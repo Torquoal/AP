@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#define MAXLINE 200
+#define MAXLINE 500
 #define MAXARRAY 50
 #define MAXPOSTCODE 10
 #define HASHVALUE 103
@@ -135,8 +135,17 @@ int me_compare(MEntry *me1, MEntry *me2){
 		&& (strcmp(me1->postcode, me2->postcode) ==0)
 		&& (me1->house_number == me2->house_number)){
 		return 0;
+	}else{
+		int x;
+		if ( (x = (strcmp(me1->surname, me2->surname)) != 0)){ 
+			return x;
+		}
+		if ( (x = (strcmp(me1->postcode, me2->postcode)) != 0)){ 
+			return x;
+		}
+		return me1->house_number - me2->house_number;  	
 	}
-	return 1;
+	
 }
 
 
