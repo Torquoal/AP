@@ -37,6 +37,7 @@ int main(int argc, char *argv[]) {
 	while ((mep = me_get(stdin)) != NULL) {
 		meq = ml_lookup(ml, mep);
 		if (meq == NULL){
+			printf("Added: %s \n", mep->surname); 
 			(void) ml_add(&ml, mep);
 		}else{ 
 			printf("Potential duplicate\n");

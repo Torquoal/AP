@@ -1,12 +1,11 @@
 #include "mentry.h"
-//#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #define MAXLINE 500
 #define MAXARRAY 50
 #define MAXPOSTCODE 10
-#define HASHVALUE 103
 
 
 
@@ -25,8 +24,8 @@ MEntry *me_get(FILE *fd){
 	for (i = 1; i < 4; i++){
 		if (fgets(line, MAXLINE, fd) == NULL){
 			return NULL;
-		
-		//printf("Line Taken: %s\n", line);
+		//}
+		printf("Line Taken: %s\n", line);
 		//if (line[0] ==  '\0' ){  //bandaid to stop mem issues
 		//	printf("END");
 		//	return NULL;
@@ -47,7 +46,7 @@ MEntry *me_get(FILE *fd){
 					for(x = 0; line[x] != ','; x++) {
    			 			entry->surname[x] = line[x]; 
 					}
-					x++;
+					//x++; REMOVED TO STOP MEM LEAK
 					entry->surname[x] = '\0';
 					//printf("Entry->Surname: %s\n", entry->surname);
 					break;
@@ -59,15 +58,15 @@ MEntry *me_get(FILE *fd){
 					//printf("Entry->HouseNum: %d\n", entry->house_number);
 					break;
 				
-                		case 3 : // remove non alphanum chars from postcode, put in struct
+                case 3 : // remove non alphanum chars from postcode, put in struct
 				
 					for(y = 0, z = 0; line[y] != '\0' ; y++) {
 						if (isalnum(line[y])){
    			 				entry->postcode[z] = line[y]; 
-							z++;
+							//z++;
 						}
 					}
-					z++;
+					//z++; ANTI MEM LEAK
 					entry->postcode[z] = '\0';
 					//printf("Entry->Postcode: %s\n", entry->postcode);
 					break;
