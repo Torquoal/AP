@@ -23,11 +23,13 @@ MEntry *me_get(FILE *fd){
 		 
 	// get a new line 
 	for (i = 1; i < 4; i++){
-		fgets(line, MAXLINE, fd);
-		
-		if (line[0] ==  '\0' || !isalnum(line[0])){  //bandaid to stop mem issues
-			//printf("END");
+		if (fgets(line, MAXLINE, fd) == NULL){
 			return NULL;
+		
+		//printf("Line Taken: %s\n", line);
+		//if (line[0] ==  '\0' ){  //bandaid to stop mem issues
+		//	printf("END");
+		//	return NULL;
 		} else {		
 
 			// Add the address line to full_address for the entry
@@ -57,10 +59,10 @@ MEntry *me_get(FILE *fd){
 					//printf("Entry->HouseNum: %d\n", entry->house_number);
 					break;
 				
-                case 3 : // remove non alphanum chars from postcode, put in struct
+                		case 3 : // remove non alphanum chars from postcode, put in struct
 				
 					for(y = 0, z = 0; line[y] != '\0' ; y++) {
-					if (isalnum(line[y])){
+						if (isalnum(line[y])){
    			 				entry->postcode[z] = line[y]; 
 							z++;
 						}
