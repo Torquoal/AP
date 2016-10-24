@@ -129,20 +129,7 @@ void me_print(MEntry *me, FILE *fd){
  * me1<me2, me1==me2, me1>me2
  */
 int me_compare(MEntry *me1, MEntry *me2){
-	//unsigned long hash1, hash2;
-		
 	
-	//hash1 = me_hash(me1, HASHVALUE );
-	//printf("hash1: %ld\n", hash1);
-	//printf("\0");
-	
-	//printf("Me2Present: %s\n", me2->surname);
-	//hash2 = me_hash(me2, HASHVALUE);
-	
-	//printf("hash2: %ld\n", hash2);
-	//printf("\0");
-	//return hash1 - hash2;
-	//return 1;
 	
 	if ((strcmp(me1->surname, me2->surname) == 0)
 		&& (strcmp(me1->postcode, me2->postcode) ==0)

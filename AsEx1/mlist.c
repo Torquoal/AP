@@ -2,7 +2,7 @@
 #include "mlist.h"
 #include <stdlib.h>
 #include <stdio.h>
-#define HASHVALUE 101
+#define HASHVALUE 300
 
 typedef struct mlistnode {
 	struct mlistnode *next;
@@ -11,7 +11,8 @@ typedef struct mlistnode {
 
 struct mlist {
 	//mlist contains 2d array, ** = pointer to array of MListNode pointers
-	struct mlistnode **table; 
+	struct mlistnode **table;
+	int size; 
 };
 
 int ml_verbose = 0;	/* if true, prints diagnostics on stderr */
@@ -19,12 +20,13 @@ int ml_verbose = 0;	/* if true, prints diagnostics on stderr */
 /* ml_create - created a new mailing list */
 MList *ml_create(void) {
 	MList *ml;
-	int i;
+	unsigned int i;
 
 	// if -v print that new list being made
 	if (ml_verbose){
 		fprintf(stderr, "mlist: creating mailing list\n");
 	}	
+	
 		
 	// allocate memory to list. If successful, allocate memory to the hashtable within
 	// the list. Then fill the hashtable with nulls. Then return the list. 	
@@ -37,6 +39,8 @@ MList *ml_create(void) {
 			ml->table[i] = NULL;
 		}
 	}
+	//printf("TableSize: %d\n", sizeof(ml->table));
+	ml->size = HASHVALUE;
 	return ml;
 }
 
@@ -50,16 +54,17 @@ int ml_add(MList **ml, MEntry *me){
 	// there are any entries. if there are, iterate through them until at the end.
 	// then append. If not, make it the first entry in that bucket.
 	MList *p;
-	MListNode *q;
+	MListNode *q, *r;
 	unsigned long hashme;
+	int i = 0;
 	
 	p = *ml;
 	if (ml_lookup(p, me) != NULL)
 		return 1;
 	
 
-	
-	hashme = me_hash(me, HASHVALUE);
+	//printf("ListSize: %d\n", p->size);	
+	hashme = me_hash(me, p->size);
 	
 	//printf("Mentry: %s\n", me->full_address); 	
 	
@@ -67,8 +72,30 @@ int ml_add(MList **ml, MEntry *me){
 		return 0;
 	}
 	q->entry = me;
+	// adds to the front
 	q->next = p->table[hashme]; 
 	p->table[hashme] = q;
+	for (r = p->table[hashme]; r != NULL; r = r->next){
+		i++;
+	}
+	printf("i: %d\n", i);
+	
+	// if a bucket is over 20, should make a new table with larger size. Then for
+	// each entry in old table, add to the new one, then destroy it. Once finished,
+	// destroy the old table and set MList table to the new one.
+
+
+	if (i > 20){ 
+		if (ml_verbose){
+			fprintf(stderr, "mlist: resizing mailing list\n");
+			}
+		printf("Resize time!\n");
+		//printf("Size: %ld\n", p->size);
+		p->size = (p->size)*2;
+		//printf("Size: %ld\n", p->size);
+		p->table = realloc(p->table, sizeof(MListNode*)*(p->size)); 
+		//printf("TableSize: %d\n", sizeof(p->table)/sizeof(p->table[0]));
+	}
 	//printf("TableEntry: %s\n", p->table[hashme]->entry->surname);
 	
 	
@@ -80,12 +107,14 @@ int ml_add(MList **ml, MEntry *me){
 MEntry *ml_lookup(MList *ml, MEntry *me){
 	MList *p;
 	MListNode *q;
-	unsigned long hashme = me_hash(me, HASHVALUE);
+	
 	
 	if (ml_verbose){
 		fprintf(stderr, "mlist: ml_lookup() entered\n");
 	}	
 	p = ml;
+	unsigned long hashme = me_hash(me, p->size);
+	//printf("ListSize: %d\n", p->size);
 	q = p->table[hashme];
 	//printf("test q: %s\n", q->entry->surname);
 	for (q = p->table[hashme]; q != NULL; q = q->next){
