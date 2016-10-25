@@ -105,17 +105,19 @@ int ml_add(MList **ml, MEntry *me){
 			// for each entry in the bucket
 			for (r = p->table[j]; r != NULL; r = r->next){
 				// add entries to newTable, then free destroy this entry 			
+				MListNode *temp;
 				
+				hashme = me_hash(r->entry, p->size);
 				
-				hashme = me_hash(s->entry, p->size);				
-				s->next = newTable[hashme]; 
-				newTable[hashme] = s;
-				printf("Reallocated Entry: %s\n at bucket %d\n", s->entry->surname, j);
+				temp->entry = r->entry;
+				temp->next = newTable[hashme]; 
+				newTable[hashme] = temp;
+				printf("Reallocated Entry: %s at bucket %d\n", temp->entry->surname, j);
 			}
 		}
 		p->table = newTable;	
 
-		printf("Resize time!\n");
+		//printf("Resize time!\n");
 		
 	}	
 	return 1;
