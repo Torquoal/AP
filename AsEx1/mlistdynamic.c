@@ -110,13 +110,15 @@ int ml_add(MList **ml, MEntry *me){
 			// for each entry in the bucket
 			for (r = p->table[j]; r != NULL; r = r->next){
 				// add entries to newTable, then free destroy this entry 			
-				MListNode *temp;
 				
 				hashme = me_hash(r->entry, p->size);
+				
+				MListNode *temp = r->next;
 				
 				temp->entry = r->entry;
 				temp->next = newTable[hashme]; 
 				newTable[hashme] = temp;
+				r = temp;
 				printf("Reallocated Entry: %s at bucket %d\n", temp->entry->surname, j);
 			}
 		}
@@ -160,12 +162,16 @@ void ml_destroy(MList *ml){
 	if (ml_verbose){
 		fprintf(stderr, "mlist: ml_destroy() entered\n");
 	}	
-	q = ml->table[i];
-	while (q != NULL) {
-		MListNode *r = q->next;
-		me_destroy(q->entry);
-		free(q);
-		q = r;
+	// for each index in hash table
+	for (q = ml->table[i]; i<= ml->size; i++){
+		
+		// iterate through bucket, free each element.
+		while (q != NULL){ 
+			MListNode *r = q->next;
+			me_destroy(q->entry);
+			free(q);
+			q = r;
+		}	
 	}
 	free(ml);
 }

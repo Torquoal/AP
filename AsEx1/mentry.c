@@ -10,7 +10,7 @@
 #include <ctype.h>
 
 // define some char array sizes to malloc MEntry structs later
-#define MAXLINE 500
+#define MAXLINE 150
 #define MAXARRAY 50
 #define MAXPOSTCODE 10
 

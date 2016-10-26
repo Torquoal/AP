@@ -15,7 +15,6 @@ typedef struct mlistnode {
 	MEntry *entry;
 } MListNode;
 
-// type
 struct mlist {
 	struct mlistnode **table;
 	int size; 
